@@ -1,44 +1,119 @@
 package com.measurementApp;
 
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-class AppTest {
+import com.measurementApp.App.Feet;
+import com.measurementApp.App.Inches;
 
-    @Test
-    void testEquality_SameValue() {
-        App.Feet f1 = new App.Feet(1.0);
-        App.Feet f2 = new App.Feet(1.0);
+public class AppTest {
 
-        assertTrue(f1.equals(f2), "1.0 ft should equal 1.0 ft");
-    }
 
-    @Test
-    void testEquality_DifferentValue() {
-        App.Feet f1 = new App.Feet(1.0);
-        App.Feet f2 = new App.Feet(2.0);
+// UC1 TEST CASES (Feet)
 
-        assertFalse(f1.equals(f2), "1.0 ft should not equal 2.0 ft");
-    }
 
-    @Test
-    void testEquality_NullComparison() {
-        App.Feet f1 = new App.Feet(1.0);
+@Test
+public void testFeetEquality_SameValue() {
 
-        assertFalse(f1.equals(null), "1.0 ft should not equal null");
-    }
+    Feet f1 = new Feet(1.0);
+    Feet f2 = new Feet(1.0);
 
-    @Test
-    void testEquality_NonNumericInput() {
-        App.Feet f1 = new App.Feet(1.0);
+    assertTrue(f1.equals(f2));
+}
 
-        assertFalse(f1.equals("text"), "1.0 ft should not equal non-numeric input");
-    }
 
-    @Test
-    void testEquality_SameReference() {
-        App.Feet f1 = new App.Feet(1.0);
+@Test
+public void testFeetEquality_DifferentValue() {
 
-        assertTrue(f1.equals(f1), "Object should equal itself");
-    }
+    Feet f1 = new Feet(1.0);
+    Feet f2 = new Feet(2.0);
+
+    assertFalse(f1.equals(f2));
+}
+
+
+@Test
+public void testFeetEquality_NullComparison() {
+
+    Feet f1 = new Feet(1.0);
+
+    assertFalse(f1.equals(null));
+}
+
+
+@Test
+public void testFeetEquality_DifferentClass() {
+
+    Feet f1 = new Feet(1.0);
+
+    String str = "1.0";
+
+    assertFalse(f1.equals(str));
+}
+
+
+@Test
+public void testFeetEquality_SameReference() {
+
+    Feet f1 = new Feet(1.0);
+
+    assertTrue(f1.equals(f1));
+}
+
+
+
+
+// UC2 TEST CASES (Inches)
+
+
+
+@Test
+public void testInchesEquality_SameValue() {
+
+    Inches i1 = new Inches(1.0);
+    Inches i2 = new Inches(1.0);
+
+    assertTrue(i1.equals(i2));
+}
+
+
+@Test
+public void testInchesEquality_DifferentValue() {
+
+    Inches i1 = new Inches(1.0);
+    Inches i2 = new Inches(2.0);
+
+    assertFalse(i1.equals(i2));
+}
+
+
+@Test
+public void testInchesEquality_NullComparison() {
+
+    Inches i1 = new Inches(1.0);
+
+    assertFalse(i1.equals(null));
+}
+
+
+@Test
+public void testInchesEquality_DifferentClass() {
+
+    Inches i1 = new Inches(1.0);
+
+    String str = "1.0";
+
+    assertFalse(i1.equals(str));
+}
+
+
+@Test
+public void testInchesEquality_SameReference() {
+
+    Inches i1 = new Inches(1.0);
+
+    assertTrue(i1.equals(i1));
+}
+
+
 }
