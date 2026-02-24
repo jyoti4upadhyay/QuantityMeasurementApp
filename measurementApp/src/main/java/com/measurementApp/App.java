@@ -1,105 +1,225 @@
 package com.measurementApp;
-
 public class App {
 
+    // UC1
+    public static class Feet {
 
-// UC1: Feet Class
-public static class Feet {
+        private final double value;
 
-    private final double value;
+        public Feet(double value) {
+            this.value = value;
+        }
 
-    // Constructor
-    public Feet(double value) {
-        this.value = value;
+        @Override
+        public boolean equals(Object obj) {
+
+            if (this == obj)
+                return true;
+
+            if (obj == null)
+                return false;
+
+            if (getClass() != obj.getClass())
+                return false;
+
+            Feet other = (Feet) obj;
+
+            return Double.compare(this.value, other.value) == 0;
+        }
     }
 
-    // equals method override
-    @Override
-    public boolean equals(Object obj) {
-
-        // same reference
-        if (this == obj)
-            return true;
-
-        // null check
-        if (obj == null)
-            return false;
-
-        // class check
-        if (getClass() != obj.getClass())
-            return false;
-
-        // cast
-        Feet other = (Feet) obj;
-
-        // compare values
-        return Double.compare(this.value, other.value) == 0;
-    }
-}
 
 
-// UC2: Inches Class
-public static class Inches {
+    // UC2
+    public static class Inches {
 
-    private final double value;
+        private final double value;
 
-    // Constructor
-    public Inches(double value) {
-        this.value = value;
+        public Inches(double value) {
+            this.value = value;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+
+            if (this == obj)
+                return true;
+
+            if (obj == null)
+                return false;
+
+            if (getClass() != obj.getClass())
+                return false;
+
+            Inches other = (Inches) obj;
+
+            return Double.compare(this.value, other.value) == 0;
+        }
     }
 
-    // equals method override
-    @Override
-    public boolean equals(Object obj) {
 
-        // same reference
-        if (this == obj)
-            return true;
 
-        // null check
-        if (obj == null)
-            return false;
+    // UC3 + UC4 + UC5
 
-        // class check
-        if (getClass() != obj.getClass())
-            return false;
+    public enum LengthUnit {
 
-        // cast
-        Inches other = (Inches) obj;
+        FEET(12.0),
 
-        // compare values
-        return Double.compare(this.value, other.value) == 0;
+        INCHES(1.0),
+
+        YARDS(36.0),
+
+        CENTIMETERS(0.393701);
+
+
+
+        private final double conversionFactor;
+
+
+        LengthUnit(double conversionFactor) {
+
+            this.conversionFactor = conversionFactor;
+
+        }
+
+
+
+        public double getConversionFactor() {
+
+            return conversionFactor;
+
+        }
+
     }
-}
 
 
-// UC2 Method: Feet Equality Demo
-public static void demonstrateFeetEquality() {
 
-    Feet f1 = new Feet(1.0);
-    Feet f2 = new Feet(1.0);
+    public static class Length {
 
-    System.out.println("Feet Equal: " + f1.equals(f2));
-}
+        private final double value;
+
+        private final LengthUnit unit;
 
 
-// UC2 Method: Inches Equality Demo
-public static void demonstrateInchesEquality() {
 
-    Inches i1 = new Inches(1.0);
-    Inches i2 = new Inches(1.0);
+        public Length(double value, LengthUnit unit) {
 
-    System.out.println("Inches Equal: " + i1.equals(i2));
-}
+            if (!Double.isFinite(value))
+
+                throw new IllegalArgumentException("Invalid value");
+
+            if (unit == null)
+
+                throw new IllegalArgumentException("Unit cannot be null");
+
+            this.value = value;
+
+            this.unit = unit;
+
+        }
 
 
-// Main Method
-public static void main(String[] args) {
 
-    demonstrateFeetEquality();
+        private double toBaseUnit() {
 
-    demonstrateInchesEquality();
-}
+            return this.value * this.unit.getConversionFactor();
 
+        }
+
+
+
+        public Length convertTo(LengthUnit targetUnit) {
+
+            double result = convert(this.value, this.unit, targetUnit);
+
+            return new Length(result, targetUnit);
+
+        }
+
+
+
+        @Override
+
+        public boolean equals(Object obj) {
+
+            if (this == obj)
+                return true;
+
+            if (obj == null)
+                return false;
+
+            if (getClass() != obj.getClass())
+                return false;
+
+            Length other = (Length) obj;
+
+            return Double.compare(
+                    this.toBaseUnit(),
+                    other.toBaseUnit()
+            ) == 0;
+
+        }
+
+
+
+        @Override
+        public String toString() {
+
+            return value + " " + unit;
+
+        }
+    }
+
+
+
+    // UC5 Conversion API
+
+    public static double convert( double value, LengthUnit source,LengthUnit target) {
+
+        if (!Double.isFinite(value))
+
+            throw new IllegalArgumentException("Invalid value");
+
+        if (source == null || target == null)
+
+            throw new IllegalArgumentException("Unit cannot be null");
+
+
+
+        double baseValue = value * source.getConversionFactor();
+
+        return baseValue / target.getConversionFactor();
+
+    }
+
+
+
+    // Demo methods
+
+
+    public static void demonstrateLengthConversion( double value, LengthUnit from,LengthUnit to ) {
+
+        double result = convert(value, from, to);
+
+        System.out.println(value + " " + from +
+
+                " = " + result + " " + to);
+
+    }
+
+
+
+    public static void main(String[] args) {
+
+
+        demonstrateLengthConversion(  1.0, LengthUnit.FEET, LengthUnit.INCHES );
+
+
+        demonstrateLengthConversion( 1.0, LengthUnit.YARDS, LengthUnit.FEET);
+
+
+        demonstrateLengthConversion(  2.54,  LengthUnit.CENTIMETERS, LengthUnit.INCHES);
+
+    }
 
 }
