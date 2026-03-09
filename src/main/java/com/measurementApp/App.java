@@ -1,21 +1,18 @@
 package com.measurementApp;
 
 /**
- * QuantityMeasurementApp UC6 Addition Operations Between Length Measurements
- * <p>This use case extends UCS by introducing addition operations between length measurements.
+ * QuantityMeasurementApp UC7 
+ * Addition with Target Unit Specification
+ * <p>This use case extends UC6 by addressing addition operations between length measurements.
  * The Quantity Length API can add two measurements of potentially different units (but same
- * category-length) and return the result as per the unit of the first operand.</p>
- * 
+ * category-length) and return the result in a specified target unit.</p>
  * <p>Examples:
  * <ul>
- * <li>Adding 1 foot and 12 inches yields 2 feet (based on the unit of the first operand)</li>
+ * <li>Adding 1 foot and 12 inches yields 2 feet (or 24 inches, depending on target unit)</li>
  * <li>Measurements must belong to the same category (length) but can have different units</li>
- * <li>Result is returned as per the unit of the first operand</li>
+ * <li>Result is returned in the specified target unit</li>
  * </ul>
  * </p>
- * @author Developer
- * @version 1.0
- * @since UC6
 */
 
 public class App {
@@ -39,7 +36,7 @@ public class App {
 	// ================= UC5 METHODS =================
 
 	
-	 // Convert one length to target unit
+	// Convert one length to target unit
 	public static Length demonstrateLengthConversion(double value, Length.LengthUnit fromUnit,
 			Length.LengthUnit targetUnit) {
 
@@ -48,7 +45,7 @@ public class App {
 	}
 
 	
-	 // Overloaded Conversion using Length object
+	// Overloaded Conversion using Length object
 	public static Length demonstrateLengthConversion(Length length, Length.LengthUnit toUnit) {
 
 		return length.convertTo(toUnit);
@@ -61,8 +58,13 @@ public class App {
 		return targetLength.add(givenLength);
 	}
 	
+	// ================= UC7 METHODS =================
+	
 	// Overloaded Method & Add two lengths and then converted them into target unit
 	public static Length demonstarteLengthAddition(Length length1, Length length2, Length.LengthUnit targetUnit) {
+		if (targetUnit == null) {
+			throw new IllegalArgumentException("Target unit cannot be null.");
+		}
 		Length totalLength = length1.add(length2);
 		return totalLength.convertTo(targetUnit);
 	}

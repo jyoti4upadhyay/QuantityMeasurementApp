@@ -222,7 +222,7 @@ public class AppTest {
 		Length length = new Length(5.0, Length.LengthUnit.FEET);
 		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
 				() -> App.demonstarteLengthAddition(length, null));
-		assertEquals("Given unit cannot be null", exception.getMessage());
+		assertEquals("Length cannot be null", exception.getMessage());
 	}
 	
 	@Test
@@ -240,6 +240,69 @@ public class AppTest {
 		Length length2 = new Length(0.02, Length.LengthUnit.YARDS);
 		Length sumLength = App.demonstarteLengthAddition(length1, length2);
 		Length exceptedLength = new Length(0.03, Length.LengthUnit.YARDS);
+		assertTrue(App.demonstrateLengthEquality(sumLength, exceptedLength));
+	}
+	
+	@Test
+	public void testAdditionExplicitTargetUnitYards() {
+		Length length1 = new Length(1.0, Length.LengthUnit.FEET);
+		Length length2 = new Length(12.0, Length.LengthUnit.INCHES);
+		Length sumLength = App.demonstarteLengthAddition(length1, length2, Length.LengthUnit.YARDS);
+		Length expectedSum = new Length(0.67, Length.LengthUnit.YARDS);
+		assertTrue(App.demonstrateLengthEquality(sumLength, expectedSum));
+	}
+	
+	@Test
+	public void testAdditionExplicitTargetUnitSameAsFirstOperand() {
+		Length length1 = new Length(2.0, Length.LengthUnit.YARDS);
+		Length length2 = new Length(3.0, Length.LengthUnit.FEET);
+		Length sumLength = App.demonstarteLengthAddition(length1, length2, Length.LengthUnit.YARDS);
+		Length expectedSum = new Length(3.0, Length.LengthUnit.YARDS);
+		assertTrue(App.demonstrateLengthEquality(sumLength, expectedSum));
+	}
+	
+	@Test
+	public void testAdditionExplicitTargetUnitCommutativity() {
+		Length l1 = new Length(1.0, Length.LengthUnit.FEET);
+		Length l2 = new Length(12.0, Length.LengthUnit.INCHES);
+		Length l1PlusL2 = App.demonstarteLengthAddition(l1, l2, Length.LengthUnit.YARDS);
+		Length l2PlusL1 = App.demonstarteLengthAddition(l2, l1, Length.LengthUnit.YARDS);
+		assertTrue(App.demonstrateLengthEquality(l1PlusL2, l2PlusL1));
+	}
+	
+	@Test
+	public void testAdditionExplicitTargetUnitNegativeValues() {
+		Length length1 = new Length(5.0, Length.LengthUnit.FEET);
+		Length length2 = new Length(-2.0, Length.LengthUnit.FEET);
+		Length sumLength = App.demonstarteLengthAddition(length1, length2, Length.LengthUnit.INCHES);
+		Length exceptedLength = new Length(36.0, Length.LengthUnit.INCHES);
+		assertTrue(App.demonstrateLengthEquality(sumLength, exceptedLength));
+	}
+	
+	@Test
+	public void testAdditionExplicitTargetUnitNullTargetUnit() {
+		Length length1 = new Length(1.0, Length.LengthUnit.FEET);
+		Length length2 = new Length(12.0, Length.LengthUnit.INCHES);
+		IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+				() -> App.demonstarteLengthAddition(length1, length2, null));
+		assertEquals("Target unit cannot be null.", exception.getMessage());
+	}
+	
+	@Test
+	public void testAdditionExplicitTargetUnitLargeToSmallScale() {
+		Length length1 = new Length(1000.0, Length.LengthUnit.FEET);
+		Length length2 = new Length(500.0, Length.LengthUnit.FEET);
+		Length sumLength = App.demonstarteLengthAddition(length1, length2, Length.LengthUnit.INCHES);
+		Length exceptedLength = new Length(18000.0, Length.LengthUnit.INCHES);
+		assertTrue(App.demonstrateLengthEquality(sumLength, exceptedLength));
+	}
+	
+	@Test
+	public void testAdditionExplicitTargetUnitSmallToLargeScale() {
+		Length length1 = new Length(12.0, Length.LengthUnit.INCHES);
+		Length length2 = new Length(12.0, Length.LengthUnit.INCHES);
+		Length sumLength = App.demonstarteLengthAddition(length1, length2, Length.LengthUnit.YARDS);
+		Length exceptedLength = new Length(0.67, Length.LengthUnit.YARDS);
 		assertTrue(App.demonstrateLengthEquality(sumLength, exceptedLength));
 	}
 }

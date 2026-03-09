@@ -1,14 +1,12 @@
-/*
- * Use Case 6: Add two quantities of the same category
- * 
+/**
+ * Use Case 7: Add two quantities of the same category with target unit specification
  * This use case allows adding two Length objects together.
- * The result is returned in the unit of the first operand.
- * 
+ * The result is returned as per the specified target unit.
  * Example:
- * 		Length length1 = new Length(4.0, LengthUnit.FEET);
- * 		Length length2 = new Length(12.0, LengthUnit.Inches);
- * 		Length result = length1.add(length2);  // Result: 5.0 FEET
- */
+ * Length length1 = new Length (3.0, LengthUnit.FEET);
+ * Length length2 = new Length (12.0, LengthUnit. INCHES);
+ * Length result = length1.add(length2, LengthUnit. FEET); // Result: 4.0 FEET
+*/
 
 package com.measurementApp;
 
@@ -42,9 +40,9 @@ public class Length {
 		if (unit == null) {
 			throw new IllegalArgumentException("Unit cannot be null.");
 		}
-		if (!Double.isFinite(value)) {
-			throw new IllegalArgumentException("Invalid numeric value.");
-		}
+		if (Double.isNaN(value) || Double.isInfinite(value)) {
+	        throw new IllegalArgumentException("Value must be a finite number");
+	    }
 		this.value = value;
 		this.unit = unit;
 	}
@@ -105,7 +103,11 @@ public class Length {
 	public Length add(Length thatLength) {
 		
 		if (thatLength == null) {
-			throw new IllegalArgumentException("Given unit cannot be null");
+			throw new IllegalArgumentException("Length cannot be null");
+		}
+		
+		if (this.unit == thatLength.unit) {
+			return new Length(this.value + thatLength.value, this.unit);
 		}
 		
 		double thisInBase = this.convertToBaseUnit();
@@ -115,6 +117,14 @@ public class Length {
 		double convertedValue = convertFromBaseUnitToTargetUnit(totalInBase, this.unit);
 		
 		return new Length(convertedValue, this.unit);
+	}
+	
+	// UC7 - Add two lengths in a target unit
+	private Length addAndConvert(Length length, LengthUnit targetUnit) {
+		Length len = this.add(length);
+		double lengthInInches = len.convertToBaseUnit();
+		double lengthInTargetUnit = convertFromBaseUnitToTargetUnit(lengthInInches, targetUnit);
+		return new Length(lengthInTargetUnit, targetUnit);
 	}
 	
 	// Convert base unit to target unit
@@ -167,6 +177,16 @@ public class Length {
 		Length cm = new Length(2.54, Length.LengthUnit.CENTIMETERS);
 		Length inch = new Length(1.0, Length.LengthUnit.INCHES);
 		System.out.println("2.54 Centimeters + 1 Inches = " + cm.add(inch));
+		
+		// 1.0 Foot + 24.0 Inches = 1 Yard
+		Length fe = new Length(1.0, Length.LengthUnit.FEET);
+		Length in = new Length(24.0, Length.LengthUnit.INCHES);
+		System.out.println("1.0 Foot + 24.0 Inches = " + fe.addAndConvert(in, Length.LengthUnit.YARDS));
+		
+		// 36.0 Inches + 1.0 Yard = 6 Feet
+		Length inchs = new Length(36.0, Length.LengthUnit.INCHES);
+		Length yard = new Length(1.0, Length.LengthUnit.YARDS);
+		System.out.println("36.0 Inches + 1.0 Yard = " + inchs.addAndConvert(yard, Length.LengthUnit.FEET));
 
 		// Exception Test
 		try {
