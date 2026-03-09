@@ -1,13 +1,5 @@
-/**
- * Use Case 7: Add two quantities of the same category with target unit specification
- * This use case allows adding two Length objects together.
- * The result is returned as per the specified target unit.
- * Example:
- * Length length1 = new Length (3.0, LengthUnit.FEET);
- * Length length2 = new Length (12.0, LengthUnit. INCHES);
- * Length result = length1.add(length2, LengthUnit. FEET); // Result: 4.0 FEET
-*/
-
+// Use Case 8: Refactor QuantityLength to Use Standalone LengthUnit Enum
+ 
 package com.measurementApp;
 
 import java.util.Objects;
@@ -18,54 +10,24 @@ public class Length {
 	private double value;
 	private LengthUnit unit;
 
-	/**
-	 * Nested enumeration representing different length units. Base unit: Inches
-	 */
-	public enum LengthUnit {
-		FEET(12.0), INCHES(1.0), YARDS(36.0), CENTIMETERS(0.393701);
-
-		private final double conversionFactor;
-
-		private LengthUnit(double conversionFactor) {
-			this.conversionFactor = conversionFactor;
-		}
-
-		public double getConversionFactor() {
-			return conversionFactor;
-		}
-	}
-
 	// Constructor to initialize length value and unit
 	public Length(double value, LengthUnit unit) {
 		if (unit == null) {
 			throw new IllegalArgumentException("Unit cannot be null.");
 		}
 		if (Double.isNaN(value) || Double.isInfinite(value)) {
-	        throw new IllegalArgumentException("Value must be a finite number");
-	    }
+			throw new IllegalArgumentException("Value must be a finite number");
+		}
 		this.value = value;
 		this.unit = unit;
 	}
 
 	/**
-	 * Converts this length to base unit (inches)
+	 * Equals method is overridden to firstly check if the two objects are the same
+	 * reference. If not, it checks if the other object is null or of a different
+	 * class. Finally, calls the compare method to determine equality based on
+	 * converted values.
 	 */
-	private double convertToBaseUnit() {
-		double base = value * unit.getConversionFactor();
-		return Math.round(base * 100.0) / 100.0;
-	}
-
-	private boolean compare(Length thatLength) {
-		if (thatLength == null)
-			return false;
-		return Double.compare(this.convertToBaseUnit(), thatLength.convertToBaseUnit()) == 0;
-	}
-
-	// Equals method is overridden to firstly check if the two objects are the same
-	// reference.
-	// If not, it checks if the other object is null or of a different class.
-	// Finally, calls the compare method to determine equality based on converted
-	// values.
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -82,7 +44,7 @@ public class Length {
 	}
 
 	/**
-	 * UC5 Conversion Method
+	 *  Conversion Method
 	 */
 	public Length convertTo(LengthUnit targetUnit) {
 		if (targetUnit == null)
@@ -98,38 +60,59 @@ public class Length {
 
 		return new Length(convertedValue, targetUnit);
 	}
-	
-	// UC6 - Addition Method
+
+	/**
+	 * Add two lengths into one specific target unit
+	 */
 	public Length add(Length thatLength) {
-		
+
 		if (thatLength == null) {
 			throw new IllegalArgumentException("Length cannot be null");
 		}
-		
+
 		if (this.unit == thatLength.unit) {
 			return new Length(this.value + thatLength.value, this.unit);
 		}
-		
+
 		double thisInBase = this.convertToBaseUnit();
 		double thatInBase = thatLength.convertToBaseUnit();
-		
-		double totalInBase = thisInBase + thatInBase;		
+
+		double totalInBase = thisInBase + thatInBase;
 		double convertedValue = convertFromBaseUnitToTargetUnit(totalInBase, this.unit);
-		
+
 		return new Length(convertedValue, this.unit);
 	}
-	
-	// UC7 - Add two lengths in a target unit
+
+	/**
+	 * Add two lengths and convert them into specific target unit
+	 */
 	private Length addAndConvert(Length length, LengthUnit targetUnit) {
 		Length len = this.add(length);
 		double lengthInInches = len.convertToBaseUnit();
 		double lengthInTargetUnit = convertFromBaseUnitToTargetUnit(lengthInInches, targetUnit);
 		return new Length(lengthInTargetUnit, targetUnit);
 	}
-	
+
+	/**
+	 * Compare two lengths
+	 */
+	private boolean compare(Length thatLength) {
+		if (thatLength == null)
+			return false;
+		return Double.compare(this.convertToBaseUnit(), thatLength.convertToBaseUnit()) == 0;
+	}
+
+	/**
+	 * Converts this length to base unit (inches)
+	 */
+	private double convertToBaseUnit() {
+		double base = value * unit.getConversionFactor();
+		return Math.round(base * 100.0) / 100.0;
+	}
+
 	// Convert base unit to target unit
 	private double convertFromBaseUnitToTargetUnit(double lengthInInches, LengthUnit targetUnit) {
-		Length inches = new Length(lengthInInches, Length.LengthUnit.INCHES);
+		Length inches = new Length(lengthInInches, LengthUnit.INCHES);
 		Length result = inches.convertTo(targetUnit);
 		return result.value;
 	}
@@ -167,26 +150,26 @@ public class Length {
 
 		// toString Test
 		System.out.println("String Representation: " + feet);
-		
+
 		// 12 Inches + 1 Foot = 24 Inches
-		Length inches = new Length(12.0, Length.LengthUnit.INCHES);
-		Length foot = new Length(1.0, Length.LengthUnit.FEET);
+		Length inches = new Length(12.0, LengthUnit.INCHES);
+		Length foot = new Length(1.0, LengthUnit.FEET);
 		System.out.println("12 Inches + 1 Foot = " + inches.add(foot));
-		
+
 		// 2.54 Centimeters + 1 Inches = ~5.08 Centimeters
-		Length cm = new Length(2.54, Length.LengthUnit.CENTIMETERS);
-		Length inch = new Length(1.0, Length.LengthUnit.INCHES);
+		Length cm = new Length(2.54, LengthUnit.CENTIMETERS);
+		Length inch = new Length(1.0, LengthUnit.INCHES);
 		System.out.println("2.54 Centimeters + 1 Inches = " + cm.add(inch));
-		
+
 		// 1.0 Foot + 24.0 Inches = 1 Yard
-		Length fe = new Length(1.0, Length.LengthUnit.FEET);
-		Length in = new Length(24.0, Length.LengthUnit.INCHES);
-		System.out.println("1.0 Foot + 24.0 Inches = " + fe.addAndConvert(in, Length.LengthUnit.YARDS));
-		
+		Length fe = new Length(1.0, LengthUnit.FEET);
+		Length in = new Length(24.0, LengthUnit.INCHES);
+		System.out.println("1.0 Foot + 24.0 Inches = " + fe.addAndConvert(in, LengthUnit.YARDS));
+
 		// 36.0 Inches + 1.0 Yard = 6 Feet
-		Length inchs = new Length(36.0, Length.LengthUnit.INCHES);
-		Length yard = new Length(1.0, Length.LengthUnit.YARDS);
-		System.out.println("36.0 Inches + 1.0 Yard = " + inchs.addAndConvert(yard, Length.LengthUnit.FEET));
+		Length inchs = new Length(36.0, LengthUnit.INCHES);
+		Length yard = new Length(1.0, LengthUnit.YARDS);
+		System.out.println("36.0 Inches + 1.0 Yard = " + inchs.addAndConvert(yard, LengthUnit.FEET));
 
 		// Exception Test
 		try {
@@ -206,7 +189,7 @@ public class Length {
 		} catch (IllegalArgumentException e) {
 			System.out.println("Exception caught for null target unit: " + e.getMessage());
 		}
-		
+
 		try {
 			inches.add(null);
 		} catch (IllegalArgumentException e) {
