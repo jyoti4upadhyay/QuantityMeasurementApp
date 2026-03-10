@@ -19,7 +19,5 @@ public interface IMeasurable {
 	
 	public double convertFromBaseUnit(double baseValue);
 	
-	public static void main(String[] args) {
-		System.out.println("IMeasurable Interface!");	
-	}
+	String getUnitName();
 }
