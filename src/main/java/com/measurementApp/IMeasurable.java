@@ -1,23 +1,26 @@
 package com.measurementApp;
-/**
- * IMeasurable interface defines the contract for measurable units.
- * 
- * This inerface serves as a common abstraction for diifferent types of measurements
- * such as weight and length units. Classes implementing this interface should provide
- * functionality to handle unit conversions and comparisons between different measurement types.
- * 
- * @see WeightUnit
- * @see LengthUnit
- */
-
-
 public interface IMeasurable {
-	
-	public double getConversionFactor();
-	
-	public double convertToBaseUnit(double value);
-	
-	public double convertFromBaseUnit(double baseValue);
-	
-	String getUnitName();
+
+    double getConversionFactor();  
+
+    default double convertToBaseUnit(double value) {
+        return value * getConversionFactor();
+    }
+
+    default double convertFromBaseUnit(double baseValue) {
+        return baseValue / getConversionFactor();
+    }
+    double toBaseUnit(double value);
+
+    double fromBaseUnit(double value);
+
+    SupportsArithmetic supportsArithmetic = () -> true;
+
+    default boolean supportsArithmetic() {
+        return supportsArithmetic.isSupported();
+    }
+
+    String getUnitName();
+
+	void validateOperationSupport(String operation);
 }
