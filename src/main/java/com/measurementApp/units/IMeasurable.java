@@ -1,4 +1,4 @@
-package com.measurementApp;
+package com.measurementApp.units;
 public interface IMeasurable {
 
     double getConversionFactor();  

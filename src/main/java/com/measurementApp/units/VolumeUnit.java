@@ -1,15 +1,14 @@
-package com.measurementApp;
+package com.measurementApp.units;
 
-public enum LengthUnit implements IMeasurable {
+public enum VolumeUnit implements IMeasurable {
 
-    FEET(1.0),
-    INCHES(1.0 / 12.0),
-    YARDS(3.0),
-    CENTIMETERS(0.0328084);
+    LITRE(1.0),
+    MILLILITRE(0.001),
+    GALLON(3.78541);
 
     private final double conversionFactor;
 
-    LengthUnit(double conversionFactor) {
+    VolumeUnit(double conversionFactor) {
         this.conversionFactor = conversionFactor;
     }
 
@@ -23,13 +22,13 @@ public enum LengthUnit implements IMeasurable {
         return name();
     }
 
-    // Convert unit → base unit (FEET)
+    // Convert unit → base unit (LITRE)
     @Override
     public double toBaseUnit(double value) {
         return value * conversionFactor;
     }
 
-    // Convert base unit → this unit
+    // Convert base unit → target unit
     @Override
     public double fromBaseUnit(double value) {
         return value / conversionFactor;
@@ -37,6 +36,6 @@ public enum LengthUnit implements IMeasurable {
 
     @Override
     public void validateOperationSupport(String operation) {
-        // Length supports arithmetic operations
+        // Volume supports arithmetic operations
     }
 }
