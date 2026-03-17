@@ -1,30 +1,28 @@
-
 package com.measurementApp.app;
 
 import com.measurementApp.controller.QuantityMeasurementController;
 import com.measurementApp.dto.QuantityDTO;
-import com.measurementApp.repository.QuantityMeasurementCacheRepository;
+import com.measurementApp.repository.QuantityMeasurementDBRepository;
 import com.measurementApp.service.QuantityMeasurementServiceImpl;
 
 public class QuantityMeasurementApp {
 
     public static void main(String[] args) {
 
-        QuantityMeasurementCacheRepository repository =
-                QuantityMeasurementCacheRepository.getInstance();
+        QuantityMeasurementDBRepository repo=new QuantityMeasurementDBRepository();
 
-        QuantityMeasurementServiceImpl service =
-                new QuantityMeasurementServiceImpl(repository);
+        QuantityMeasurementServiceImpl service=new QuantityMeasurementServiceImpl(repo);
 
-        QuantityMeasurementController controller =
-                new QuantityMeasurementController(service);
+        QuantityMeasurementController controller=new QuantityMeasurementController(service);
 
-        QuantityDTO q1 = new QuantityDTO(1.0, "FEET", "LENGTH");
-        QuantityDTO q2 = new QuantityDTO(12.0, "INCHES", "LENGTH");
-        QuantityDTO q3 = new QuantityDTO(24.0,"INCHES","LENGTH");
+        QuantityDTO q1=new QuantityDTO(1,"FEET");
+        QuantityDTO q2=new QuantityDTO(12,"INCH");
 
-        controller.performComparison(q1, q2);
-        controller.performAddition(q1, q2);
-        controller.performComparison(q2, q3);
+        controller.performComparison(q1,q2);
+        controller.performAddition(q1,q2);
+        controller.performConversion(q1,"INCH");
+        controller.performSubtraction(q1,q2);
+        controller.performDivision(q1,q2);
+
     }
 }

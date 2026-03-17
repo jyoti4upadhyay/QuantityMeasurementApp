@@ -7,37 +7,43 @@ public class QuantityMeasurementEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String operation;
-    private double operand1;
-    private double operand2;
-    private double result;
+    private String input1;
+    private String input2;
+    private String result;
     private boolean error;
-    private String message;
+    private String errorMessage;
 
-    public QuantityMeasurementEntity(String operation,
-                                     double operand1,
-                                     double operand2,
-                                     double result) {
+    public QuantityMeasurementEntity(String operation, String input1,
+                                     String input2, String result) {
         this.operation = operation;
-        this.operand1 = operand1;
-        this.operand2 = operand2;
+        this.input1 = input1;
+        this.input2 = input2;
         this.result = result;
         this.error = false;
     }
 
-    public QuantityMeasurementEntity(String message) {
+    public QuantityMeasurementEntity(String errorMessage) {
         this.error = true;
-        this.message = message;
+        this.errorMessage = errorMessage;
     }
 
     public boolean hasError() {
         return error;
     }
 
-    public double getResult() {
+    public String getResult() {
         return result;
     }
 
-    public String getMessage() {
-        return message;
-    }
+	public String getOperation() {
+		return operation;
+	}
+
+	public String getInput1() {
+		return input1;
+	}
+	public String getInput2() {
+		return input2;
+	}
+	
 }

@@ -1,9 +1,9 @@
-
 package com.measurementApp.repository;
 
-import com.measurementApp.entity.QuantityMeasurementEntity;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.measurementApp.entity.QuantityMeasurementEntity;
 
 public class QuantityMeasurementCacheRepository
         implements IQuantityMeasurementRepository {
@@ -15,9 +15,10 @@ public class QuantityMeasurementCacheRepository
     private QuantityMeasurementCacheRepository() {}
 
     public static QuantityMeasurementCacheRepository getInstance() {
-        if (instance == null) {
+
+        if(instance == null)
             instance = new QuantityMeasurementCacheRepository();
-        }
+
         return instance;
     }
 
