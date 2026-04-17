@@ -1,0 +1,21 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: quantity-service-test
+  datasource:
+    url: jdbc:h2:mem:quantityservice-testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+eureka:
+  client:
+    enabled: false
+
+jwt:
+  secretKey: 6f3c9c2a9b1d4e8f7a0c5d9e2b1c4f8a7d6e9b0c3a5f7d1e8b9c2a4d6f8e1a3
